@@ -10,7 +10,11 @@ int main(int argc, char** argv)
     string port = string(argv[2]);
     socket.connect("tcp://" + addr + ":" + port);
 
+    vector<int8_t> data;
+    data.push_back(stoi(argv[3]));
+    data.push_back(stoi(argv[4]));
 
-    socket.send(zmq::buffer(string(argv[3])), zmq::send_flags::none);
+
+    socket.send(zmq::buffer(data), zmq::send_flags::none);
     return 0;
 }
