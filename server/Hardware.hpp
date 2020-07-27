@@ -17,20 +17,15 @@ public:
 	{
 		static std::mutex localMutex;
 		std::lock_guard<std::mutex> guard(localMutex);
-		pr_dbg("received angle:%f", angle);
-
 		//map [-90,90]->[1000,2000]
 		float impilsWidth = (-0.006 * std::min(90.f, std::max(-90.f, angle)) + 1.5f) * 1000;
-		pr_dbg("impilsWidth:%f", impilsWidth);
 
-		float fullDelay = 1000000.f / 50.f; //50MHz frequence (in microseconds)
 		for(int i = 0; i < 10; i++){
 			digitalWrite(pinNumber, 1);
 			delayMicroseconds(impilsWidth);
 			digitalWrite(pinNumber, 0);
-			delayMicroseconds(fullDelay - impilsWidth);
+			delayMicroseconds(impilsWidth);
 		}
-		pr_dbg("stop rotation");
 	}
 
 	Servo() = delete;
