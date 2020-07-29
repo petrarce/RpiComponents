@@ -43,10 +43,18 @@ void RpiConnector::setValue(int value)
 }
 void RpiConnector::send()
 {
-    std::array<signed char, 2> msg;
+    static signed char msgcnt = 0;
+    if(!mSocket->connected())
+    {
+        pr_dbg("not sending. Socket is not connected");
+        return;
+    }
+    std::array<signed char, 3> msg;
     msg[0] = static_cast<int>(mAction);
     msg[1] = mValue;
+    msg[2] = msgcnt;
     mSocket->send(zmq::buffer(msg), zmq::send_flags::dontwait);
+    msgcnt++;
 }
 
 void RpiConnector::reconnect()
