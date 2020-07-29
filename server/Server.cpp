@@ -24,6 +24,7 @@ int main(int argc, char** argv)
         //1-st byte - action
         //2-nd byte - value
     fprintf(stderr, "Starting server\n");
+    int msgNum = 0;
     while(1)
     {
         zmq::message_t msg;
@@ -36,11 +37,16 @@ int main(int argc, char** argv)
         }
         int8_t* data = static_cast<int8_t*>(msg.data());
         int dataSize = msg.size();
-        pr_dbg("Received action: %d, received value: %d", data[0], data[1]);
+
+        // if(msgNum > data[2] && msgNum - data[2] < 50 || data[2] > msgNum && data[2] - msgNum > 50)
+        //     continue;
+
+        pr_dbg("Received action: %d, received value: %d, message num: %d", data[0], data[1], data[2]);
+        msgNum = data[2];
         switch(data[0])
         {
             case FOREVARD:
-                machine.forevard();
+                machine.forevard(1);
                 break;
             case STOP:
                 machine.stop();
