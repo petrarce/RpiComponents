@@ -12,7 +12,6 @@ Rectangle {
         port: 51525
         action: 2
         value: 0
-        onValueChanged: send()
         property int wheelState: 0
         onWheelStateChanged: {
             switch(wheelState)
