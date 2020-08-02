@@ -1,7 +1,7 @@
 #include <iostream>
 #include <zmq.hpp>
 #include <definitions.hpp>
-#include "Hardware.hpp"
+#include "Machine.hpp"
 
 using namespace std;
 

@@ -14,10 +14,15 @@ endif()
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 add_executable(server
-    Hardware.cpp
-	Hardware.hpp
-    Server.cpp
-    Server.hpp
+	Machine.cpp
+	Servo.hpp
+	Operator.hpp
+	Machine.hpp
+	Servo.cpp
+	Server.hpp
+	Motor.cpp
+	Motor.hpp
+	Server.cpp
 )
 # install libs
 install(TARGETS server DESTINATION bin/)
