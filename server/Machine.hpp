@@ -1,10 +1,5 @@
 #pragma once
 #include <iostream>
-#include <wiringPi.h>
-#include <definitions.hpp>
-#include <mutex>
-#include <cmath>
-#include <boost/thread/thread.hpp>
 #include "Servo.hpp"
 #include "Motor.hpp"
 

@@ -1,6 +1,12 @@
 
-find_library(WIRINGPI_LIBRARIES NAMES wiringPi REQUIRED)
-if (WIRINGPI_LIBRARIES MATCHES ".*-NOTFOUND")
+find_library(wiringPi_LIB NAMES wiringPi REQUIRED)
+find_library(i2c_LIB i2c REQUIRED)
+
+if (i2c_LIB MATCHES ".*-NOTFOUND")
+	message("Not building server: i2c not found")
+	return()
+endif()
+if (wiringPi_LIB MATCHES ".*-NOTFOUND")
 	message("Not building server: wiringPi not found")
 	return()
 endif()
@@ -27,3 +33,5 @@ add_executable(server
 # install libs
 install(TARGETS server DESTINATION bin/)
 target_link_libraries(server zmq wiringPi boost_thread boost_system)
+
+add_subdirectory(./mpu6050/)

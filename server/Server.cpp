@@ -16,6 +16,11 @@ int main(int argc, char** argv)
     zmq::socket_t socket{context, zmq::socket_type::pair};
     socket.bind("tcp://*:" + port);
 
+    //TODO:
+    /*
+        create thread, that receives commands and starts manipulations ofon the car/copter/tank...
+        create thread which listens requests and replyes data on the requests
+    */
     //init logic
     Machine machine;
 
