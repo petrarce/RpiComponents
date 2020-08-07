@@ -8,9 +8,10 @@
 template<class ... Args>
 class Operator
 {
-	std::unique_ptr<boost::thread> task;
 	virtual void executionTask(Args... args) = 0;
 	std::function<void (Args...)> fn;
+protected:
+	std::unique_ptr<boost::thread> task;
 public:
 	Operator()
 	{
@@ -28,14 +29,22 @@ public:
 			}	
 		};
 	}
+	virtual ~Operator()
+	{
+		stop();
+	}
+
 	void run(Args... args)
 	{
-		if(task)
-		{
+		stop();
+		task = std::unique_ptr<boost::thread>(new boost::thread(fn, args...));
+	}
+	void stop(){
+		if(task){
 			task->interrupt();
 			task->join();
+			task = nullptr;
 		}
-		task = std::unique_ptr<boost::thread>(new boost::thread(fn, args...));
 	}
 
 	Operator(const Operator&) = delete;

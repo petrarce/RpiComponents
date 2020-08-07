@@ -32,6 +32,7 @@ find_package(ZeroMQ REQUIRED)
 
 add_subdirectory(./client/)
 add_subdirectory(./server/)
+add_subdirectory(./test_path_detection/)
 
 
 
