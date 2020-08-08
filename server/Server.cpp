@@ -2,6 +2,7 @@
 #include <zmq.hpp>
 #include <definitions.hpp>
 #include "Machine.hpp"
+#include "RotationStation.hpp"
 
 using namespace std;
 

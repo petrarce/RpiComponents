@@ -11,7 +11,7 @@ if (wiringPi_LIB MATCHES ".*-NOTFOUND")
 	return()
 endif()
 
-find_package(Boost COMPONENTS thread system QUIET)
+find_package(Boost COMPONENTS thread system chrono QUIET)
 if(NOT Boost_FOUND)
     message("Not building server: Boost not found")
     return()
@@ -22,16 +22,17 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 add_executable(server
 	Machine.cpp
 	Servo.hpp
-	Operator.hpp
 	Machine.hpp
 	Servo.cpp
 	Server.hpp
 	Motor.cpp
 	Motor.hpp
 	Server.cpp
+	RotationStation.hpp
 )
 # install libs
 install(TARGETS server DESTINATION bin/)
-target_link_libraries(server zmq wiringPi boost_thread boost_system)
+target_link_libraries(server zmq wiringPi boost_thread boost_system boost_chrono mpu6050 i2c)
 
+include_directories(AFTER ./mpu6050/)
 add_subdirectory(./mpu6050/)

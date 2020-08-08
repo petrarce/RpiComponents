@@ -47,7 +47,7 @@ extern "C" {
 }
 #include <cmath>
 #include <thread>
-#include "../Operator.hpp"
+#include <Operator.hpp>
 
 #define _POSIX_C_SOURCE 200809L //Used for calculating time
 

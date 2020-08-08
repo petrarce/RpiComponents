@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Operator.hpp"
+#include <Operator.hpp>
 
 class Motor : public Operator<int8_t, float >
 {

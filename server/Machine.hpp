@@ -2,19 +2,24 @@
 #include <iostream>
 #include "Servo.hpp"
 #include "Motor.hpp"
-
+#include "RotationStation.hpp"
 
 
 class Machine {
 	enum PINS {
 		MOTOR = 0,
 		WHEEL = 2,
+		RSTATION = 3
 	};
 
 public:
 	explicit Machine() :
 		servo(WHEEL),
-		motor(MOTOR){};
+		motor(MOTOR), 
+		rotationStation(RSTATION)
+		{
+			rotationStation.run(1000, 180.f);
+		};
 	void forevard(float speed)
 	{
 		motor.run(Motor::Direction::FOREWARD, speed);
@@ -32,5 +37,7 @@ public:
 private:
 	Servo servo;
 	Motor motor;
+	RotationStation rotationStation;
+
 };
 
