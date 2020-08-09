@@ -13,7 +13,6 @@ public:
 private:
 	void executionTask(int period, float sectorWidth) override;
 
-
 	Servo mServo;
 	MPU6050 mMpuDevice;
 };
