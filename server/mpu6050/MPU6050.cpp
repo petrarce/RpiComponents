@@ -16,7 +16,18 @@
 //Include the header file for this class
 #include "MPU6050.h"
 
-MPU6050::MPU6050(int8_t addr, size_t period) : pollPeriod(period) {
+constexpr std::array<float, 4> MPU6050::_gyro_sens;
+constexpr std::array<float, 4> MPU6050::_accel_sens;
+
+MPU6050::MPU6050(int8_t addr, 
+					size_t period, 
+					MPU6050::GyroRange gyro_range,
+					MPU6050::AccelRange accel_range) : 
+	pollPeriod(period) ,
+	_gyro_range(gyro_range),
+	_accel_range(accel_range)
+
+{
 	int status;
 
 	MPU6050_addr = addr;
@@ -40,13 +51,43 @@ MPU6050::MPU6050(int8_t addr, size_t period) : pollPeriod(period) {
 
 	i2c_smbus_write_byte_data(f_dev, 0x19, 0b00000100); //Set sample rate divider (to 200Hz) - see Register Map
 
-	i2c_smbus_write_byte_data(f_dev, 0x1b, GYRO_CONFIG); //Configure gyroscope settings - see Register Map (see MPU6050.h for the GYRO_CONFIG parameter)
-
-	i2c_smbus_write_byte_data(f_dev, 0x1c, ACCEL_CONFIG); //Configure accelerometer settings - see Register Map (see MPU6050.h for the GYRO_CONFIG parameter)
+	i2c_smbus_write_byte_data(f_dev, 0x1b, (_gyro_range << 3) | 0x0); //Configure gyroscope settings - see Register Map (see MPU6050.h for the GYRO_CONFIG parameter)
+	i2c_smbus_write_byte_data(f_dev, 0x1c, (_accel_range << 3) | 0x0); //Configure accelerometer settings - see Register Map (see MPU6050.h for the GYRO_CONFIG parameter)
 
 	//Set offsets to zero
 	i2c_smbus_write_byte_data(f_dev, 0x06, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x07, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x08, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x09, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x0A, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x0B, 0b00000000), i2c_smbus_write_byte_data(f_dev, 0x00, 0b10000001), i2c_smbus_write_byte_data(f_dev, 0x01, 0b00000001), i2c_smbus_write_byte_data(f_dev, 0x02, 0b10000001);
+	pr_info("Start calibration. This may take a while. Please leave mpu still");
+	calibrateGyro();
+	calibrateAccel();
 
+
+}
+
+void MPU6050::calibrateGyro()
+{
+	calibrate(_gyro_offsets, &MPU6050::getGyroRaw);
+}
+
+void MPU6050::calibrateAccel()
+{
+	calibrate(_accel_offsets, &MPU6050::getAccelRaw);
+}
+
+
+void MPU6050::calibrate(std::array<float, 3>& offsets, void (MPU6050::*fn)(float*, float*, float*))
+{	
+	offsets[0] = 0, offsets[1] = 0, offsets[2] = 0;
+	float gfx = 0, gfy = 0, gfz = 0;
+	int samples = 1000;
+	for(int i = 0; i < samples; i++)
+	{
+		float gx, gy, gz;
+		
+		(this->*fn)(&gx, &gy, &gz);
+		gfx += gx; gfy += gy; gfz += gz;
+	}
+
+	offsets[0] = gfx / samples; offsets[1] = gfy / samples; offsets[2] = gfz / samples;
 }
 
 void MPU6050::getGyroRaw(float *roll, float *pitch, float *yaw) {
@@ -60,9 +101,9 @@ void MPU6050::getGyroRaw(float *roll, float *pitch, float *yaw) {
 
 void MPU6050::getGyro(float *roll, float *pitch, float *yaw) {
 	getGyroRaw(roll, pitch, yaw); //Store raw values into variables
-	*roll = round((*roll - G_OFF_X) * 1000.0 / GYRO_SENS) / 1000.0; //Remove the offset and divide by the gyroscope sensetivity (use 1000 and round() to round the value to three decimal places)
-	*pitch = round((*pitch - G_OFF_Y) * 1000.0 / GYRO_SENS) / 1000.0;
-	*yaw = round((*yaw - G_OFF_Z) * 1000.0 / GYRO_SENS) / 1000.0;
+	*roll 	= round((*roll - _gyro_offsets[0]) / MPU6050::_gyro_sens[_gyro_range]); //Remove the offset and divide by the gyroscope sensetivity (use 1000 and round() to round the value to three decimal places)
+	*pitch 	= round((*pitch - _gyro_offsets[1]) / MPU6050::_gyro_sens[_gyro_range]);
+	*yaw 	= round((*yaw - _gyro_offsets[2]) / MPU6050::_gyro_sens[_gyro_range]);
 }
 
 void MPU6050::getAccelRaw(float *x, float *y, float *z) {
@@ -76,34 +117,13 @@ void MPU6050::getAccelRaw(float *x, float *y, float *z) {
 
 void MPU6050::getAccel(float *x, float *y, float *z) {
 	getAccelRaw(x, y, z); //Store raw values into variables
-	*x = round((*x - A_OFF_X) * 1000.0 / ACCEL_SENS) / 1000.0; //Remove the offset and divide by the accelerometer sensetivity (use 1000 and round() to round the value to three decimal places)
-	*y = round((*y - A_OFF_Y) * 1000.0 / ACCEL_SENS) / 1000.0;
-	*z = round((*z - A_OFF_Z) * 1000.0 / ACCEL_SENS) / 1000.0;
-}
-
-void MPU6050::getOffsets(float *ax_off, float *ay_off, float *az_off, float *gr_off, float *gp_off, float *gy_off) {
-	float gyro_off[3]; //Temporary storage
-	float accel_off[3];
-
-	*gr_off = 0, *gp_off = 0, *gy_off = 0; //Initialize the offsets to zero
-	*ax_off = 0, *ay_off = 0, *az_off = 0; //Initialize the offsets to zero
-
-	for (int i = 0; i < 10000; i++) { //Use loop to average offsets
-		getGyroRaw(&gyro_off[0], &gyro_off[1], &gyro_off[2]); //Raw gyroscope values
-		*gr_off = *gr_off + gyro_off[0], *gp_off = *gp_off + gyro_off[1], *gy_off = *gy_off + gyro_off[2]; //Add to sum
-
-		getAccelRaw(&accel_off[0], &accel_off[1], &accel_off[2]); //Raw accelerometer values
-		*ax_off = *ax_off + accel_off[0], *ay_off = *ay_off + accel_off[1], *az_off = *az_off + accel_off[2]; //Add to sum
-	}
-
-	*gr_off = *gr_off / 10000, *gp_off = *gp_off / 10000, *gy_off = *gy_off / 10000; //Divide by number of loops (to average)
-	*ax_off = *ax_off / 10000, *ay_off = *ay_off / 10000, *az_off = *az_off / 10000;
-
-	*az_off = *az_off - ACCEL_SENS; //Remove 1g from the value calculated to compensate for gravity)
+	*x = round((*x - _accel_offsets[0]) / _accel_sens[_accel_range]); //Remove the offset and divide by the accelerometer sensetivity (use 1000 and round() to round the value to three decimal places)
+	*y = round((*y - _accel_offsets[1]) / _accel_sens[_accel_range]);
+	*z = round((*z - _accel_offsets[2]) / _accel_sens[_accel_range]);
 }
 
 int MPU6050::getAngle(int axis, float *result) {
-	if (axis >= 0 && axis <= 2) { //Check that the axis is in the valid range
+	if (axis >= 0 && axis <= 2) { //Check that the axis is in the valid gyro_range
 		*result = _angle[axis]; //Get the result
 		return 0;
 	}
@@ -118,6 +138,7 @@ void MPU6050::_update() { //Main update function - runs continuously
 	clock_gettime(CLOCK_REALTIME, &start); //Read current time into start variable
 
 	while (1) { //Loop forever
+		boost::this_thread::interruption_point();
 		getGyro(&gr, &gp, &gy); //Get the data from the sensors
 		getAccel(&ax, &ay, &az);
 
@@ -179,9 +200,5 @@ void MPU6050::_update() { //Main update function - runs continuously
 }
 void MPU6050::executionTask()
 {
-	while(1)
-	{
-		_update();
-		boost::this_thread::sleep_for(boost::chrono::milliseconds(pollPeriod));
-	}
+	_update();
 }

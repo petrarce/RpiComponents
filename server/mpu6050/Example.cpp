@@ -6,11 +6,11 @@
 
 #include "MPU6050.h"
 
-MPU6050 device(0x68, 100);
 
 int main() {
-	float ax, ay, az, gr, gp, gy; //Variables to store the accel, gyro and angle values
+	MPU6050 device(0x68, 100);
 
+	float ax, ay, az, gr, gp, gy; //Variables to store the accel, gyro and angle values
 	sleep(1); //Wait for the MPU6050 to stabilize
 
 /*
@@ -33,14 +33,6 @@ int main() {
 		std::cout << "Current angle around the yaw axis: " << gy << "\n";
 		usleep(250000); //0.25sec
 	}
-
-	//Get the current accelerometer values
-	device.getAccel(&ax, &ay, &az);
-	std::cout << "Accelerometer Readings: X: " << ax << ", Y: " << ay << ", Z: " << az << "\n";
-
-	//Get the current gyroscope values
-	device.getGyro(&gr, &gp, &gy);
-	std::cout << "Gyroscope Readings: X: " << gr << ", Y: " << gp << ", Z: " << gy << "\n";
 
 	return 0;
 }

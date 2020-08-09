@@ -1,6 +1,7 @@
 #include <iostream>
 #include <zmq.hpp>
 #include <definitions.hpp>
+#include <wiringPi.h>
 #include "Machine.hpp"
 #include "RotationStation.hpp"
 

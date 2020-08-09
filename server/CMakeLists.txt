@@ -21,13 +21,14 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 add_executable(server
 	Machine.cpp
-	Servo.hpp
 	Machine.hpp
-	Servo.cpp
-	Server.hpp
 	Motor.cpp
 	Motor.hpp
 	Server.cpp
+	Server.hpp
+	Servo.cpp
+	Servo.hpp
+	RotationStation.cpp
 	RotationStation.hpp
 )
 # install libs
