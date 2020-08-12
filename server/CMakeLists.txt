@@ -25,7 +25,6 @@ add_executable(server
 	Motor.cpp
 	Motor.hpp
 	Server.cpp
-	Server.hpp
 	Servo.cpp
 	Servo.hpp
 	RotationStation.cpp
@@ -33,7 +32,18 @@ add_executable(server
 )
 # install libs
 install(TARGETS server DESTINATION bin/)
-target_link_libraries(server zmq wiringPi boost_thread boost_system boost_chrono mpu6050 i2c)
+target_link_libraries(server 
+	zmq 
+	wiringPi 
+	i2c 
+	boost_thread 
+	boost_system 
+	boost_chrono 
+	mpu6050 
+	sr04)
 
 include_directories(AFTER ./mpu6050/)
+include_directories(AFTER ./sr04/)
+
 add_subdirectory(./mpu6050/)
+add_subdirectory(./sr04/)

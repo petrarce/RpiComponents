@@ -4,10 +4,14 @@
 #include "RotationStation.hpp"
 #include "Environment.hpp"
 
-RotationStation::RotationStation(int srvPin, int echoPin, int trigPin): 
+RotationStation::RotationStation(int srvPin, 
+									int echoPin, 
+									int trigPin, 
+									float maxDistance): 
 	mServo(srvPin),
-	mDistSens(echoPin, trigPin),
-	mMpuDevice(0x68, 100)
+	mMpuDevice(0x68, 100),
+	mSonar(trigPin, echoPin),
+	mMaxDist(maxDistance)
 {
 	mMpuDevice.calc_yaw = true;
 	mMpuDevice.run();
@@ -31,7 +35,7 @@ void RotationStation::executionTask(int period, float sectorWidth)
 						boost::chrono::milliseconds(static_cast<int>(period / sectorWidth));
 
 		//read distance value
-        float dist = mDistSens.getDistance();
+        float dist = mSonar.distance(mMaxDist);
         Singleton<Environment>::getInstance().setDistance(yaw, dist);
 
 		//rotate servo

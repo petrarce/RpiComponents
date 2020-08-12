@@ -10,8 +10,8 @@ class Machine {
 		MOTOR = 0,
 		WHEEL = 2,
 		RSTATION = 3,
-		DISTECHO = -1,
-		DISTTRIGGER = -1,
+		DISTTRIGGER = 4,
+		DISTECHO = 5,
 	};
 
 public:

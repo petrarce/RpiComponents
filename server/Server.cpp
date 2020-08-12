@@ -4,7 +4,7 @@
 #include <wiringPi.h>
 #include "Machine.hpp"
 #include "RotationStation.hpp"
-#include "StatisticsOperator.cpp"
+#include "StatisticsOperator.hpp"
 
 using namespace std;
 
