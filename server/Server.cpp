@@ -4,6 +4,7 @@
 #include <wiringPi.h>
 #include "Machine.hpp"
 #include "RotationStation.hpp"
+#include "StatisticsOperator.cpp"
 
 using namespace std;
 
@@ -25,6 +26,8 @@ int main(int argc, char** argv)
     */
     //init logic
     Machine machine;
+    StatisticsOperator stats(stoi(port) + 1);
+    stats.run(10000);
 
     //start listening loop
     //message format: 

@@ -3,7 +3,7 @@
 Machine::Machine() :
 	servo(WHEEL),
 	motor(MOTOR), 
-	rotationStation(RSTATION)
+	rotationStation(RSTATION, DISTECHO, DISTTRIGGER)
 {
 	rotationStation.run(1000, 180.f);
 }

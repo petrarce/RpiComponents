@@ -9,7 +9,9 @@ class Machine {
 	enum PINS {
 		MOTOR = 0,
 		WHEEL = 2,
-		RSTATION = 3
+		RSTATION = 3,
+		DISTECHO = -1,
+		DISTTRIGGER = -1,
 	};
 
 public:
