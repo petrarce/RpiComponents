@@ -12,3 +12,7 @@ enum ClientMessages {
 	STOP,
 	ROTATE,
 };
+
+enum DataTypeId {
+	tDistances = 1
+};
