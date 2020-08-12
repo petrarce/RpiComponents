@@ -1,6 +1,5 @@
 #pragma once
 #include <QQmlExtensionPlugin>
-#include "RpiConnector.hpp"
 
 class ThunderPlugin : public QQmlExtensionPlugin
 {

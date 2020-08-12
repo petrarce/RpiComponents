@@ -13,6 +13,10 @@ add_executable(client
 target_link_libraries(client zmq)
 
 add_library(thunder-plugin SHARED
+    ThunderDistanceListener.cpp
+    ThunderDistanceListener.hpp
+    ThunderListener.cpp
+    ThunderListener.hpp
     ThunderPlugin.cpp
     ThunderPlugin.hpp
     RpiConnector.cpp

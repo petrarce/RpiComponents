@@ -3,35 +3,58 @@ import QtQuick.Controls 1.4
 import Thunder 0.1
 
 Rectangle {
+    id: app
     width: 500
     height:500
     color: "lightblue"
-    resources: RpiConnector {
-        id: connection
-        remoteAddress: "raspberrypi"
-        port: 51525
-        action: 2
-        value: 0
-        property int wheelState: 0
-        onWheelStateChanged: {
-            switch(wheelState)
-            {
-            case -1:
-                connection.action = 2;
-                connection.value = -90;
-                break;
-            case 0:
-                connection.action = 2;
-                connection.value = 0;
-                break;
-            case 1:
-                connection.action = 2;
-                connection.value = 90;
-                break;
-            default:
-                return;
+    resources: [
+        RpiConnector {
+            id: connection
+            remoteAddress: "raspberrypi"
+            port: 51525
+            action: 2
+            value: 0
+            property int wheelState: 0
+            onWheelStateChanged: {
+                switch(wheelState)
+                {
+                case -1:
+                    connection.action = 2;
+                    connection.value = -90;
+                    break;
+                case 0:
+                    connection.action = 2;
+                    connection.value = 0;
+                    break;
+                case 1:
+                    connection.action = 2;
+                    connection.value = 90;
+                    break;
+                default:
+                    return;
+                }
+                send()
             }
-            send()
+        },
+        ThunderDistanceListener {
+            id: dist
+            remoteAddress: connection.remoteAddress
+            port: connection.port + 1
+            onDistancesChanged: console.log(distances)
+        }
+    ]
+    Repeater {
+        model: 360
+        delegate: Rectangle {
+            width: 10
+            height: 10
+            radius: 5
+            color: "red"
+            property vector2d center: Qt.vector2d(Math.cos(index * Math.PI / 180),
+                                Math.sin(index * Math.PI / 180)).times(dist.distances[index] * 10)
+            onCenterChanged: console.log(center)
+            x: center.x + app.width / 2
+            y: center.y + app.height / 2
         }
     }
 
