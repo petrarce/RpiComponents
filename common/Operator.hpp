@@ -10,6 +10,7 @@ class Operator
 {
 	virtual void executionTask(Args... args) = 0;
 	std::function<void (Args...)> fn;
+	std::mutex localMutex;
 protected:
 	std::unique_ptr<boost::thread> task;
 public:
@@ -17,7 +18,6 @@ public:
 	{
 		fn = [this](Args... args)
 		{ 
-			static std::mutex localMutex;
 			std::lock_guard<std::mutex> guard(localMutex);
 			try 
 			{
