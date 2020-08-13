@@ -44,6 +44,8 @@ target_link_libraries(server
 
 include_directories(AFTER ./mpu6050/)
 include_directories(AFTER ./sr04/)
+include_directories(AFTER ./l298n/)
 
 add_subdirectory(./mpu6050/)
 add_subdirectory(./sr04/)
+add_subdirectory(./l298n/)
