@@ -21,7 +21,8 @@ float SR04::distance(float maxDist /*santimeters*/)
 	while(digitalRead(mEcho) == LOW)
 	{
 		int delayPeriod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin).count();
-		if(delayPeriod > 10)
+		//TODO: Calibrate sonar for minimal delay
+		if(delayPeriod > 5)
 		{
 			return -1;//timeout - return -1 as failure code 
 		}
