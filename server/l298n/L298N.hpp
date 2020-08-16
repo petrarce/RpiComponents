@@ -26,8 +26,8 @@ private:
 		{
 			assert(factor >= 0 && factor <= 1);
 			//run on frequence 100HZ = 10 msec delay = 10000 microsec
-			auto highDelay = boost::chrono::microseconds(static_cast<int>(10000 * factor));
-			auto lowDelay = boost::chrono::microseconds(static_cast<int>(10000 * (1 - factor)));
+			auto highDelay = boost::chrono::nanoseconds(static_cast<int>(100000 * factor));
+			auto lowDelay = boost::chrono::nanoseconds(static_cast<int>(100000 * (1 - factor)));
 
 			//interruption disabled
 			boost::this_thread::disable_interruption dis;

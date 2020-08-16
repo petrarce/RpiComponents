@@ -43,7 +43,28 @@ class MPU6050 : public Operator<> {
 		void getAccel(float *x, float *y, float *z);
 		void getGyro(float *roll, float *pitch, float *yaw);
 		void getOffsets(float *ax_off, float *ay_off, float *az_off, float *gr_off, float *gp_off, float *gy_off);
-		int getAngle(int axis, float *result);
+		int getAngle(int axis, float *result) const;
+		int getAngleNormalized(int axis, float *result) const
+		{
+			float angle;
+			if(getAngle(axis, &angle))
+				return 1;
+
+			float v1 = angle/360.f;
+			float v2 = (1 - 2 * std::signbit(angle)) * std::floor(std::fabs(angle / 360.f));
+			angle = (v1 - v2) * 360.f;
+			if(std::fabs(angle) >= 180)
+			{
+				angle = (1 - 2 * std::signbit(angle)) * 360 - angle;
+			}
+			angle += 180;
+			assert(angle >= 0 && angle < 360);
+			
+			*result = angle;
+			return 0;
+
+
+		}
 		size_t pollPeriod {500};
 		bool calc_yaw;
 

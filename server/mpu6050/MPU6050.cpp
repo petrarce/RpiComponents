@@ -122,7 +122,8 @@ void MPU6050::getAccel(float *x, float *y, float *z) {
 	*z = round((*z - _accel_offsets[2]) / _accel_sens[_accel_range]);
 }
 
-int MPU6050::getAngle(int axis, float *result) {
+int MPU6050::getAngle(int axis, float *result) const
+{
 	if (axis >= 0 && axis <= 2) { //Check that the axis is in the valid gyro_range
 		*result = _angle[axis]; //Get the result
 		return 0;

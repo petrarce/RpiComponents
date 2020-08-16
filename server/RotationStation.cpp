@@ -30,7 +30,7 @@ void RotationStation::executionTask(int period, float sectorWidth)
 
 		//read yaw angle
 		float yaw = 0;
-		mMpuDevice.getAngle(2, &yaw);
+		mMpuDevice.getAngleNormalized(2, &yaw);
 		auto delay = boost::chrono::system_clock::now() + 
 						boost::chrono::milliseconds(static_cast<int>(period / sectorWidth));
 

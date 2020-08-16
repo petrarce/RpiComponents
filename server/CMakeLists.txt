@@ -49,3 +49,5 @@ include_directories(AFTER ./l298n/)
 add_subdirectory(./mpu6050/)
 add_subdirectory(./sr04/)
 add_subdirectory(./l298n/)
+add_subdirectory(./dc-engine/)
+

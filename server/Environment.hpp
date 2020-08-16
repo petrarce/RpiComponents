@@ -11,14 +11,14 @@ private:
 
 public:
 	Environment() = default;
-	float distance(int angle)
+	float distance(int angle) const
 	{
 		assert(angle >= 0 && angle < 360);
-		std::lock_guard<std::mutex> guard(distMutex);
 		return distances[angle];
 	}
 	
-	void setDistance(float angle, float val){
+	void setDistance(float angle, float val)
+	{
 		float v1 = angle/360.f;
 		float v2 = (1 - 2 * std::signbit(angle)) * std::floor(std::fabs(angle / 360.f));
 		angle = (v1 - v2) * 360.f;
