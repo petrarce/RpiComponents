@@ -17,15 +17,14 @@ float SR04::distance(float maxDist /*santimeters*/)
 	std::this_thread::sleep_for(std::chrono::microseconds(10));
 	digitalWrite(mTrigger, LOW);
 	
+	//busy wait
 	auto begin = std::chrono::system_clock::now();
 	while(digitalRead(mEcho) == LOW)
 	{
-		int delayPeriod = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin).count();
+		int delayPeriod = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - begin).count();
 		//TODO: Calibrate sonar for minimal delay
-		if(delayPeriod > 5)
-		{
+		if(delayPeriod > 1000)
 			return -1;//timeout - return -1 as failure code 
-		}
 	}
 
 	auto start = std::chrono::system_clock::now();
