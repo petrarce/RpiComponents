@@ -2,6 +2,7 @@
 #include <QObject>
 #include <definitions.hpp>
 #include <zmq.hpp>
+#include <QQmlEngine>
 
 class RpiConnector : public QObject
 {
@@ -13,6 +14,11 @@ class RpiConnector : public QObject
     Q_PROPERTY(int value READ value WRITE setValue NOTIFY valueChanged)
 
 public:
+	enum MsgCode
+	{
+		MSGCODES	
+	};
+	Q_ENUMS(MsgCode)
     explicit RpiConnector();
     const QString& remoteAddress() const { return mRemoteAddress; }
     int port() const { return mPort; }

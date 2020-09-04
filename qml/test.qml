@@ -4,6 +4,8 @@ import Thunder 0.1
 
 Rectangle {
     id: app
+    
+    focus: true
     width: 500
     height:500
     color: "lightblue"
@@ -16,23 +18,7 @@ Rectangle {
             value: 0
             property int wheelState: 0
             onWheelStateChanged: {
-                switch(wheelState)
-                {
-                case -1:
-                    connection.action = 2;
-                    connection.value = -90;
-                    break;
-                case 0:
-                    connection.action = 2;
-                    connection.value = 0;
-                    break;
-                case 1:
-                    connection.action = 2;
-                    connection.value = 90;
-                    break;
-                default:
-                    return;
-                }
+                connection.action = wheelState;
                 send()
             }
         },
@@ -43,6 +29,7 @@ Rectangle {
             onDistancesChanged: console.log(distances)
         }
     ]
+    
     Repeater {
         model: 360
         delegate: Rectangle {
@@ -67,77 +54,24 @@ Rectangle {
         height: 20
         onClicked: connection.reconnect()
     }
-    focus: true
-    Keys.onLeftPressed: {
-        connection.wheelState = -1
-    }
-    Keys.onRightPressed: {
-        connection.wheelState = 1
-    }
+    
+    Keys.onUpPressed: connection.wheelState = RpiConnector.Forevard
+    Keys.onDownPressed: connection.wheelState = RpiConnector.Backward
+    Keys.onLeftPressed: connection.wheelState = RpiConnector.RotateLeft
+    Keys.onRightPressed: connection.wheelState = RpiConnector.RotateLeft
     Keys.onReleased: {
         if(event.isAutoRepeat)
             return;
         switch(event.key)
         {
+        case Qt.Key_Up:
+        case Qt.Key_Down:
         case Qt.Key_Left:
         case Qt.Key_Right:
-            connection.wheelState = 0
+            connection.wheelState = RpiConnector.Stop
             console.log("key released is triggered")
             break;
         default:
         }
     }
-    /*Slider {
-        id: slider
-        anchors.bottom: reconnect.top
-        width: parent.width
-        stepSize: 10
-        height: 20
-        minimumValue: -90
-        maximumValue: 90
-        focus: true
-        Keys.onLeftPressed: {
-            animationRight.stop()
-            animationCenter.stop()
-            animationLeft.start()
-        }
-        Keys.onRightPressed: {
-            animationLeft.stop()
-            animationCenter.stop()
-            animationRight.start()
-        }
-        Keys.onReleased: {
-            switch(event.key){
-            case Qt.Key_Left:
-            case Qt.Key_Right:
-                animationLeft.stop();
-                animationRight.stop();
-                animationCenter.start();
-            }
-        }
-
-        NumberAnimation on value {
-            id: animationLeft
-            from: slider.value
-            to: -90
-            duration:1000
-            running: false
-        }
-        NumberAnimation on value {
-            id: animationRight
-            from: slider.value
-            to: 90
-            duration:1000
-            running: false
-        }
-        NumberAnimation on value {
-            id: animationCenter
-            from: slider.value
-            to: 0
-            duration:1000
-            running: false
-        }
-    }*/
-
-
 }

@@ -6,11 +6,17 @@
 #define pr_dbg(msg, args...) fprintf(stderr, "DEBUG(%s:%d): " msg "\n", __FILE__, __LINE__, ##args)
 #define pr_info(msg, args...) fprintf(stderr, "INFO: " msg "\n", __FILE__, __LINE__, ##args)
 
+//Use this in client/server enumerations
+#define MSGCODES 	\
+	Error = -1, \
+	Forevard = 0, \
+	Backward, \
+	RotateLeft, \
+	RotateRight, \
+	Stop,
+
 enum ClientMessages {
-	ERROR = -1,
-	FOREVARD = 0,
-	STOP,
-	ROTATE,
+	MSGCODES
 };
 
 enum DataTypeId {
