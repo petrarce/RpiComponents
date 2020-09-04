@@ -26,8 +26,8 @@ int main(int argc, char** argv)
     */
     //init logic
     Machine machine;
-    StatisticsOperator stats(stoi(port) + 1);
-    stats.run(10000);
+    // StatisticsOperator stats(stoi(port) + 1);
+    // stats.run(10000);
 
     //start listening loop
     //message format: 
@@ -55,16 +55,22 @@ int main(int argc, char** argv)
         msgNum = data[2];
         switch(data[0])
         {
-            case FOREVARD:
-                machine.forevard(1);
+            case Forevard:
+                machine.forevard();
                 break;
-            case STOP:
+            case Backward:
+                machine.backvard();
+                break;
+            case Stop:
                 machine.stop();
                 break;
-            case ROTATE:
-                machine.rotate(data[1]);
+            case RotateLeft:
+                machine.rotate_left();
                 break;
-            case ERROR:
+            case RotateRight:
+                machine.rotate_right();
+                break;
+            case Error:
                 pr_warn("Some error from client... just ignore)))");
                 break;
             default: 

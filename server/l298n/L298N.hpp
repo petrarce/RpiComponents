@@ -56,8 +56,8 @@ public:
 					int enableAPin,
 					int enableBPin);
 
-	void activateA(L298N::Direction dir, float speedFactor);
-	void activateB(L298N::Direction dir, float speedFactor);
+	void activateA(L298N::Direction dir, float speedFactor = 1.0f);
+	void activateB(L298N::Direction dir, float speedFactor = 1.0f);
 	void stopA();
 	void stopB();
 

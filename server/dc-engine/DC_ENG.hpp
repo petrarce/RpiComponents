@@ -53,7 +53,7 @@ private:
 
 			std::lock_guard<std::mutex> guard(mAngleMutex);
 			mSpeed += mTorque * dt;
-			mSpeed = std::max(mSpeed, mMaxSpeed);
+			mSpeed = std::min(mSpeed, 20.f);
 			mAngle += mSpeed * dt;
 			if(totalTime > 1)
 			{

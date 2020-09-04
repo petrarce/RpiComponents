@@ -40,7 +40,10 @@ target_link_libraries(server
 	boost_system 
 	boost_chrono 
 	mpu6050 
-	sr04)
+	sr04
+	l298n
+)
+
 
 include_directories(AFTER ./mpu6050/)
 include_directories(AFTER ./sr04/)
