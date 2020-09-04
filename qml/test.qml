@@ -58,7 +58,7 @@ Rectangle {
     Keys.onUpPressed: connection.wheelState = RpiConnector.Forevard
     Keys.onDownPressed: connection.wheelState = RpiConnector.Backward
     Keys.onLeftPressed: connection.wheelState = RpiConnector.RotateLeft
-    Keys.onRightPressed: connection.wheelState = RpiConnector.RotateLeft
+    Keys.onRightPressed: connection.wheelState = RpiConnector.RotateRight
     Keys.onReleased: {
         if(event.isAutoRepeat)
             return;
