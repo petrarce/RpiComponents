@@ -36,12 +36,15 @@ private:
 		{
 			char buffer[128];
 			QVariantList devices;
-			FILE* pipe = popen("v4l2-ctl --list-devices | grep : -A 1 | grep video", "r");
+			FILE* pipe = popen(" v4l2-ctl --list-devices | grep : -A 1 | grep video | sed -e 's,[ \\t\\n],,g'", "r");
 			if(!pipe)
 				return {};
 			try{
 				while(std::fgets(buffer, 128, pipe))
+				{
+					QString str = buffer;
 					devices.push_back(QVariant::fromValue(QString(buffer)));
+				}
 			}
 			catch(...)
 			{

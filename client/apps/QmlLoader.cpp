@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 	auto engine = view.engine();
 	if(!engine)
 		return -1;
-	engine->addImportPath(QCoreApplication::applicationDirPath() + "/qmlmodules/");
+	engine->addImportPath(QCoreApplication::applicationDirPath() + "/../qmlmodules/");
 	view.setResizeMode(QQuickView::SizeRootObjectToView);
 	view.setSource(QUrl(argv[1]));
 	view.show();

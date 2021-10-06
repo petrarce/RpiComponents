@@ -1,6 +1,6 @@
 
-find_library(wiringPi_LIB NAMES wiringPi REQUIRED)
-find_library(i2c_LIB i2c REQUIRED)
+find_library(wiringPi_LIB NAMES wiringPi QUIET)
+find_library(i2c_LIB i2c QUIET)
 
 if (i2c_LIB MATCHES ".*-NOTFOUND")
 	message("Not building server: i2c not found")

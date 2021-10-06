@@ -1,6 +1,6 @@
 import QtQuick 2.2
-import QtQuick.Layouts 1.12
-import QtMultimedia 5.15
+import QtQuick.Layouts 1.2
+import QtMultimedia 5.8
 import Video 0.1
 
 Rectangle {
